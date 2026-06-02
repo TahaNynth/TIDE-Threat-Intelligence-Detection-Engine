@@ -1,0 +1,229 @@
+THREAT INTELLIGENCE REPORT
+Classification: TLP:WHITE
+Date: 2024-01-15
+Source: Internal CTI Team
+Title: LockBit 3.0 Ransomware Campaign Targeting Financial Institutions
+
+==========================================================================
+EXECUTIVE OVERVIEW
+==========================================================================
+
+This report documents an active ransomware campaign by the LockBit 3.0 group
+(also known as LockBit Black) targeting financial institutions and banking
+sector organizations across North America and Western Europe. The campaign
+began in late Q4 2023 and has continued into 2024 with increasing frequency.
+
+==========================================================================
+THREAT ACTOR PROFILE
+==========================================================================
+
+LockBit is a sophisticated ransomware-as-a-service (RaaS) operation that
+has been active since 2019. The group operates an affiliate program where
+threat actors (affiliates) conduct intrusions and deploy the ransomware in
+exchange for a percentage of ransom payments.
+
+The group is known for:
+- Double extortion tactics (file encryption + data exfiltration)
+- Targeting of critical infrastructure
+- Use of Cobalt Strike for post-exploitation
+- Exploitation of known vulnerabilities (CVE-2023-4966, CVE-2021-44228)
+
+==========================================================================
+INITIAL ACCESS VECTORS
+==========================================================================
+
+The campaign primarily leverages spear phishing emails with malicious
+attachments to achieve initial access. The phishing lures are themed around
+financial regulatory compliance and invoice approvals to target banking staff.
+
+Additionally, threat actors exploit CVE-2023-4966 (Citrix Bleed) to bypass
+authentication on Citrix NetScaler appliances at victim organizations.
+
+Two distinct initial access methods have been observed:
+
+1. Phishing emails with malicious Word documents containing VBA macros
+   that execute a PowerShell dropper
+2. Exploitation of internet-facing Citrix and Exchange servers
+
+==========================================================================
+INDICATORS OF COMPROMISE
+==========================================================================
+
+Command & Control Servers:
+  185.220.101.47
+  45.142.212.100
+  194.165.16.11
+  2a02:c207:3002:6659::1  (IPv6 C2)
+
+Malicious Domains:
+  update-cdn-microsoft.com
+  secure-transfer-portal.net
+  banking-compliance-check.io
+  lockbit-decryptor.onion
+
+Associated URLs:
+  http://185.220.101.47/payload/stage2.exe
+  https://secure-transfer-portal.net/upload/exfil.php
+  http://update-cdn-microsoft.com/a/b/c/loader.bin
+
+Phishing Infrastructure:
+  invoice-approval@secure-banking-portal.com
+  compliance@financial-update-service.net
+
+File Hashes (Malicious Payloads):
+  MD5:    d41d8cd98f00b204e9800998ecf8427e
+  SHA1:   da39a3ee5e6b4b0d3255bfef95601890afd80709
+  SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+Ransomware Binary:
+  SHA256: 8a9f2c0b1d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0
+
+LockBit DLL:
+  SHA256: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
+
+==========================================================================
+EXECUTION AND PERSISTENCE
+==========================================================================
+
+Upon gaining initial access, the threat actors execute a PowerShell dropper
+using obfuscated commands:
+
+  powershell -nop -w hidden -EncodedCommand [BASE64_PAYLOAD]
+
+The PowerShell script uses IEX (Invoke-Expression) to download and execute
+additional payloads from the C2 servers using DownloadString. It also uses
+FromBase64String to decode embedded payloads.
+
+The malware establishes persistence via registry Run keys:
+  HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+
+A malicious Windows service named "WindowsUpdateSvc" is installed using
+sc create and set to start automatically at boot.
+
+Additionally, scheduled tasks are created using schtasks to maintain access:
+  schtasks /create /tn "SystemUpdate" /tr "cmd.exe /c [payload]"
+
+==========================================================================
+PRIVILEGE ESCALATION
+==========================================================================
+
+After establishing persistence, the threat actors attempt privilege escalation
+using the following techniques:
+
+1. UAC bypass via fodhelper.exe registry hijacking
+2. LSASS memory dumping using a renamed procdump.exe to harvest credentials
+3. Pass-the-hash attacks using extracted NTLM hashes
+4. Mimikatz execution: sekurlsa::logonpasswords and lsadump::sam
+
+The actor uses token manipulation and impersonation to execute commands
+in the context of privileged accounts.
+
+==========================================================================
+DEFENSE EVASION
+==========================================================================
+
+The threat actors employ multiple defense evasion techniques:
+
+- Execution of rundll32.exe to load malicious DLLs
+- AMSI bypass using obfuscated PowerShell
+- Disabling Windows Defender via:
+    Set-MpPreference -DisableRealtimeMonitoring $true
+- Clearing Windows Event Logs using wevtutil:
+    wevtutil cl System
+    wevtutil cl Security
+    wevtutil cl Application
+- Timestomping of malicious files to avoid detection
+- Process injection into svchost.exe to hide malicious code
+
+==========================================================================
+LATERAL MOVEMENT
+==========================================================================
+
+Lateral movement is achieved through:
+
+1. RDP (port 3389) using harvested credentials
+2. SMB lateral movement via admin shares (C$, ADMIN$, IPC$)
+3. PSExec and Impacket toolkit for remote execution:
+   - wmiexec.py for WMI-based execution
+   - smbexec.py for SMB-based lateral movement
+4. Cobalt Strike beacons for C2 and lateral movement
+
+The threat actors conduct network scanning using nmap and custom tools
+to identify additional targets within the compromised network (arp scan,
+ping sweep, port scan).
+
+==========================================================================
+DATA EXFILTRATION
+==========================================================================
+
+Before deploying ransomware, the threat actors exfiltrate sensitive data:
+
+- Financial records and customer PII
+- Active Directory database (NTDS.dit)
+- VPN credentials and configuration files
+- Banking transaction data
+
+Exfiltration occurs over HTTPS to the actor-controlled server at:
+  https://secure-transfer-portal.net/upload/exfil.php
+
+Data is compressed with 7zip before exfiltration and encrypted using
+a custom XOR encoded scheme to evade DLP controls.
+
+==========================================================================
+RANSOMWARE DEPLOYMENT
+==========================================================================
+
+LockBit 3.0 ransomware is deployed after data exfiltration is complete.
+The ransomware:
+
+1. Deletes Volume Shadow Copies:
+   vssadmin delete shadows /all /quiet
+
+2. Disables system recovery:
+   bcdedit /set {default} bootstatuspolicy ignoreallfailures
+   bcdedit /set {default} recoveryenabled no
+
+3. Stops backup services:
+   net stop "Volume Shadow Copy"
+   wbadmin delete backup
+
+4. Encrypts files and appends .lockbit extension
+
+5. Drops ransom note: !!!-Restore-My-Files-!!!.txt
+
+Bitcoin payment address for ransom is included in the note.
+
+==========================================================================
+MITRE ATT&CK MAPPING SUMMARY
+==========================================================================
+
+TA0001 Initial Access:     T1566 Phishing, T1190 Exploit Public-Facing App
+TA0002 Execution:          T1059.001 PowerShell, T1059.003 CMD, T1047 WMI
+TA0003 Persistence:        T1547.001 Registry Run Keys, T1543.003 Service
+TA0004 Privilege Escalation: T1548.002 UAC Bypass, T1003 Credential Dumping
+TA0005 Defense Evasion:    T1027 Obfuscation, T1562 Impair Defenses, T1070
+TA0006 Credential Access:  T1003.001 LSASS, T1110 Brute Force
+TA0007 Discovery:          T1082, T1083, T1057, T1018, T1016
+TA0008 Lateral Movement:   T1021.001 RDP, T1021.002 SMB
+TA0009 Collection:         T1005, T1119 Automated Collection
+TA0010 Exfiltration:       T1041, T1048
+TA0011 Command and Control: T1071.001, T1573, T1105
+TA0040 Impact:             T1486 Ransomware, T1490 Inhibit Recovery, T1489
+
+==========================================================================
+RECOMMENDATIONS
+==========================================================================
+
+1. Block all listed IPs and domains at perimeter firewalls immediately
+2. Apply patch for CVE-2023-4966 on all Citrix NetScaler appliances
+3. Enable multi-factor authentication on all VPN and remote access solutions
+4. Deploy EDR solution capable of detecting credential dumping
+5. Ensure offline immutable backups are tested and current
+6. Monitor for deletion of Volume Shadow Copies as an early warning
+7. Enable PowerShell Script Block Logging (Event ID 4104)
+8. Deploy network segmentation to limit lateral movement
+9. Hunt for Cobalt Strike beacons using the provided YARA signatures
+
+==========================================================================
+END OF REPORT
+==========================================================================

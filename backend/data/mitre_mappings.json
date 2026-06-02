@@ -1,0 +1,737 @@
+[
+  {
+    "id": "T1566",
+    "name": "Phishing",
+    "tactic": "Initial Access",
+    "tactic_id": "TA0001",
+    "description": "Adversaries send phishing messages to gain access to victim systems.",
+    "keywords": [
+      {"word": "phishing", "weight": 3},
+      {"word": "spear phishing", "weight": 3},
+      {"word": "spearphishing", "weight": 3},
+      {"word": "malicious email", "weight": 2},
+      {"word": "malicious attachment", "weight": 2},
+      {"word": "email attachment", "weight": 1},
+      {"word": "lure", "weight": 1},
+      {"word": "credential harvest", "weight": 2},
+      {"word": "fake login", "weight": 2},
+      {"word": "impersonat", "weight": 1}
+    ]
+  },
+  {
+    "id": "T1190",
+    "name": "Exploit Public-Facing Application",
+    "tactic": "Initial Access",
+    "tactic_id": "TA0001",
+    "description": "Adversaries exploit weaknesses in an internet-facing application.",
+    "keywords": [
+      {"word": "exploit", "weight": 1},
+      {"word": "exploitation", "weight": 1},
+      {"word": "sql injection", "weight": 3},
+      {"word": "rce", "weight": 2},
+      {"word": "remote code execution", "weight": 3},
+      {"word": "zero-day", "weight": 2},
+      {"word": "0day", "weight": 2},
+      {"word": "vulnerability", "weight": 1},
+      {"word": "web shell", "weight": 3},
+      {"word": "webshell", "weight": 3},
+      {"word": "cve-", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1078",
+    "name": "Valid Accounts",
+    "tactic": "Initial Access",
+    "tactic_id": "TA0001",
+    "description": "Adversaries may obtain and abuse credentials of existing accounts.",
+    "keywords": [
+      {"word": "stolen credential", "weight": 3},
+      {"word": "compromised account", "weight": 3},
+      {"word": "valid credential", "weight": 3},
+      {"word": "account takeover", "weight": 3},
+      {"word": "hijacked account", "weight": 2},
+      {"word": "leaked credential", "weight": 2},
+      {"word": "credential stuffing", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1059.001",
+    "name": "Command and Scripting Interpreter: PowerShell",
+    "tactic": "Execution",
+    "tactic_id": "TA0002",
+    "description": "Adversaries abuse PowerShell commands and scripts for execution.",
+    "keywords": [
+      {"word": "powershell", "weight": 3},
+      {"word": "powershell.exe", "weight": 3},
+      {"word": "invoke-expression", "weight": 3},
+      {"word": "iex(", "weight": 3},
+      {"word": "encodedcommand", "weight": 3},
+      {"word": "bypass executionpolicy", "weight": 3},
+      {"word": "downloadstring", "weight": 2},
+      {"word": "invoke-mimikatz", "weight": 3},
+      {"word": "powersploit", "weight": 3},
+      {"word": "-nop -w hidden", "weight": 3},
+      {"word": "frombase64string", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1059.003",
+    "name": "Command and Scripting Interpreter: Windows Command Shell",
+    "tactic": "Execution",
+    "tactic_id": "TA0002",
+    "description": "Adversaries abuse the Windows command shell for execution.",
+    "keywords": [
+      {"word": "cmd.exe", "weight": 3},
+      {"word": "command shell", "weight": 2},
+      {"word": "batch file", "weight": 2},
+      {"word": ".bat", "weight": 1},
+      {"word": "cmd /c", "weight": 3},
+      {"word": "net user", "weight": 2},
+      {"word": "net localgroup", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1047",
+    "name": "Windows Management Instrumentation",
+    "tactic": "Execution",
+    "tactic_id": "TA0002",
+    "description": "Adversaries may abuse WMI for execution.",
+    "keywords": [
+      {"word": "wmic", "weight": 3},
+      {"word": "wmi", "weight": 2},
+      {"word": "windows management instrumentation", "weight": 3},
+      {"word": "wmiexec", "weight": 3},
+      {"word": "invoke-wmimethod", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1053.005",
+    "name": "Scheduled Task",
+    "tactic": "Persistence",
+    "tactic_id": "TA0003",
+    "description": "Adversaries abuse the Windows Task Scheduler to perform task scheduling.",
+    "keywords": [
+      {"word": "scheduled task", "weight": 3},
+      {"word": "schtasks", "weight": 3},
+      {"word": "task scheduler", "weight": 3},
+      {"word": "at command", "weight": 2},
+      {"word": "cron job", "weight": 2},
+      {"word": "crontab", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1547.001",
+    "name": "Registry Run Keys / Startup Folder",
+    "tactic": "Persistence",
+    "tactic_id": "TA0003",
+    "description": "Adversaries modify registry run keys to execute during startup.",
+    "keywords": [
+      {"word": "run key", "weight": 3},
+      {"word": "hkcu\\software\\microsoft\\windows\\currentversion\\run", "weight": 3},
+      {"word": "hklm\\software\\microsoft\\windows\\currentversion\\run", "weight": 3},
+      {"word": "startup folder", "weight": 3},
+      {"word": "autorun", "weight": 2},
+      {"word": "registry persistence", "weight": 3},
+      {"word": "reg add", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1543.003",
+    "name": "Create or Modify System Process: Windows Service",
+    "tactic": "Persistence",
+    "tactic_id": "TA0003",
+    "description": "Adversaries create or modify Windows services to execute malicious code.",
+    "keywords": [
+      {"word": "malicious service", "weight": 3},
+      {"word": "sc create", "weight": 3},
+      {"word": "service installation", "weight": 2},
+      {"word": "windows service", "weight": 2},
+      {"word": "new-service", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1548.002",
+    "name": "Abuse Elevation Control Mechanism: Bypass UAC",
+    "tactic": "Privilege Escalation",
+    "tactic_id": "TA0004",
+    "description": "Adversaries bypass User Account Control (UAC) to elevate privileges.",
+    "keywords": [
+      {"word": "uac bypass", "weight": 3},
+      {"word": "user account control", "weight": 2},
+      {"word": "eventvwr", "weight": 2},
+      {"word": "fodhelper", "weight": 3},
+      {"word": "bypass uac", "weight": 3},
+      {"word": "uac", "weight": 1}
+    ]
+  },
+  {
+    "id": "T1055",
+    "name": "Process Injection",
+    "tactic": "Privilege Escalation",
+    "tactic_id": "TA0004",
+    "description": "Adversaries inject code into processes to evade defenses and elevate privileges.",
+    "keywords": [
+      {"word": "process injection", "weight": 3},
+      {"word": "dll injection", "weight": 3},
+      {"word": "process hollowing", "weight": 3},
+      {"word": "reflective injection", "weight": 3},
+      {"word": "shellcode injection", "weight": 3},
+      {"word": "virtualalloc", "weight": 2},
+      {"word": "writeprocessmemory", "weight": 3},
+      {"word": "createremotethread", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1068",
+    "name": "Exploitation for Privilege Escalation",
+    "tactic": "Privilege Escalation",
+    "tactic_id": "TA0004",
+    "description": "Adversaries exploit software vulnerabilities to elevate privileges.",
+    "keywords": [
+      {"word": "privilege escalation", "weight": 3},
+      {"word": "local privilege", "weight": 2},
+      {"word": "lpe", "weight": 2},
+      {"word": "kernel exploit", "weight": 3},
+      {"word": "ring0", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1027",
+    "name": "Obfuscated Files or Information",
+    "tactic": "Defense Evasion",
+    "tactic_id": "TA0005",
+    "description": "Adversaries attempt to make their artifacts difficult to detect.",
+    "keywords": [
+      {"word": "obfuscat", "weight": 3},
+      {"word": "base64", "weight": 2},
+      {"word": "encoded payload", "weight": 3},
+      {"word": "packed", "weight": 1},
+      {"word": "packer", "weight": 2},
+      {"word": "encrypted payload", "weight": 2},
+      {"word": "xor encoded", "weight": 3},
+      {"word": "string obfuscat", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1562.001",
+    "name": "Impair Defenses: Disable or Modify Tools",
+    "tactic": "Defense Evasion",
+    "tactic_id": "TA0005",
+    "description": "Adversaries modify and/or disable security tools.",
+    "keywords": [
+      {"word": "disable antivirus", "weight": 3},
+      {"word": "disable defender", "weight": 3},
+      {"word": "tamper", "weight": 2},
+      {"word": "security tool disabled", "weight": 3},
+      {"word": "av evasion", "weight": 3},
+      {"word": "edr bypass", "weight": 3},
+      {"word": "kill process", "weight": 1},
+      {"word": "terminate security", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1070",
+    "name": "Indicator Removal",
+    "tactic": "Defense Evasion",
+    "tactic_id": "TA0005",
+    "description": "Adversaries delete or alter artifacts to remove evidence of their presence.",
+    "keywords": [
+      {"word": "log deletion", "weight": 3},
+      {"word": "clear log", "weight": 3},
+      {"word": "wevtutil", "weight": 3},
+      {"word": "clear-eventlog", "weight": 3},
+      {"word": "delete shadow", "weight": 3},
+      {"word": "timestamp tamper", "weight": 2},
+      {"word": "artefact removal", "weight": 2},
+      {"word": "artifact removal", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1218.011",
+    "name": "System Binary Proxy Execution: Rundll32",
+    "tactic": "Defense Evasion",
+    "tactic_id": "TA0005",
+    "description": "Adversaries use rundll32.exe to execute malicious DLLs.",
+    "keywords": [
+      {"word": "rundll32", "weight": 3},
+      {"word": "rundll32.exe", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1036",
+    "name": "Masquerading",
+    "tactic": "Defense Evasion",
+    "tactic_id": "TA0005",
+    "description": "Adversaries attempt to manipulate features of their artifacts to make them appear legitimate.",
+    "keywords": [
+      {"word": "masquerad", "weight": 3},
+      {"word": "renamed binary", "weight": 3},
+      {"word": "living off the land", "weight": 2},
+      {"word": "lolbas", "weight": 3},
+      {"word": "signed binary", "weight": 2},
+      {"word": "legitimate tool", "weight": 1}
+    ]
+  },
+  {
+    "id": "T1003",
+    "name": "OS Credential Dumping",
+    "tactic": "Credential Access",
+    "tactic_id": "TA0006",
+    "description": "Adversaries attempt to dump credentials to obtain account login information.",
+    "keywords": [
+      {"word": "credential dumping", "weight": 3},
+      {"word": "mimikatz", "weight": 3},
+      {"word": "hashdump", "weight": 3},
+      {"word": "lsass", "weight": 3},
+      {"word": "ntlm hash", "weight": 3},
+      {"word": "sekurlsa", "weight": 3},
+      {"word": "pass-the-hash", "weight": 3},
+      {"word": "pass the hash", "weight": 3},
+      {"word": "credential access", "weight": 2},
+      {"word": "dump credentials", "weight": 3},
+      {"word": "sam database", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1003.001",
+    "name": "OS Credential Dumping: LSASS Memory",
+    "tactic": "Credential Access",
+    "tactic_id": "TA0006",
+    "description": "Adversaries access LSASS memory to dump credentials.",
+    "keywords": [
+      {"word": "lsass memory", "weight": 3},
+      {"word": "lsass dump", "weight": 3},
+      {"word": "minidump", "weight": 2},
+      {"word": "procdump", "weight": 3},
+      {"word": "comsvcs.dll", "weight": 3},
+      {"word": "task manager dump", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1110",
+    "name": "Brute Force",
+    "tactic": "Credential Access",
+    "tactic_id": "TA0006",
+    "description": "Adversaries may use brute force techniques to gain access.",
+    "keywords": [
+      {"word": "brute force", "weight": 3},
+      {"word": "bruteforce", "weight": 3},
+      {"word": "password spray", "weight": 3},
+      {"word": "credential stuffing", "weight": 3},
+      {"word": "dictionary attack", "weight": 3},
+      {"word": "hydra", "weight": 2},
+      {"word": "login attempt", "weight": 1}
+    ]
+  },
+  {
+    "id": "T1082",
+    "name": "System Information Discovery",
+    "tactic": "Discovery",
+    "tactic_id": "TA0007",
+    "description": "Adversaries attempt to get detailed information about the operating system.",
+    "keywords": [
+      {"word": "system information", "weight": 2},
+      {"word": "systeminfo", "weight": 3},
+      {"word": "whoami", "weight": 3},
+      {"word": "hostname", "weight": 1},
+      {"word": "ipconfig", "weight": 2},
+      {"word": "uname", "weight": 2},
+      {"word": "os fingerprint", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1083",
+    "name": "File and Directory Discovery",
+    "tactic": "Discovery",
+    "tactic_id": "TA0007",
+    "description": "Adversaries enumerate files and directories on the compromised system.",
+    "keywords": [
+      {"word": "dir command", "weight": 2},
+      {"word": "ls command", "weight": 2},
+      {"word": "file enumeration", "weight": 3},
+      {"word": "directory listing", "weight": 2},
+      {"word": "find files", "weight": 1}
+    ]
+  },
+  {
+    "id": "T1057",
+    "name": "Process Discovery",
+    "tactic": "Discovery",
+    "tactic_id": "TA0007",
+    "description": "Adversaries attempt to get information about running processes.",
+    "keywords": [
+      {"word": "process list", "weight": 2},
+      {"word": "tasklist", "weight": 3},
+      {"word": "get-process", "weight": 3},
+      {"word": "process enumeration", "weight": 3},
+      {"word": "ps aux", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1018",
+    "name": "Remote System Discovery",
+    "tactic": "Discovery",
+    "tactic_id": "TA0007",
+    "description": "Adversaries discover remote systems on the network.",
+    "keywords": [
+      {"word": "network scan", "weight": 3},
+      {"word": "nmap", "weight": 3},
+      {"word": "arp scan", "weight": 3},
+      {"word": "ping sweep", "weight": 3},
+      {"word": "host discovery", "weight": 2},
+      {"word": "network enumeration", "weight": 3},
+      {"word": "port scan", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1016",
+    "name": "System Network Configuration Discovery",
+    "tactic": "Discovery",
+    "tactic_id": "TA0007",
+    "description": "Adversaries look for details about the network configuration.",
+    "keywords": [
+      {"word": "ipconfig", "weight": 2},
+      {"word": "netstat", "weight": 3},
+      {"word": "network configuration", "weight": 2},
+      {"word": "route table", "weight": 2},
+      {"word": "ifconfig", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1021.001",
+    "name": "Remote Services: Remote Desktop Protocol",
+    "tactic": "Lateral Movement",
+    "tactic_id": "TA0008",
+    "description": "Adversaries use RDP to move laterally.",
+    "keywords": [
+      {"word": "rdp", "weight": 3},
+      {"word": "remote desktop", "weight": 3},
+      {"word": "3389", "weight": 2},
+      {"word": "mstsc", "weight": 3},
+      {"word": "remote desktop protocol", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1021.002",
+    "name": "Remote Services: SMB/Windows Admin Shares",
+    "tactic": "Lateral Movement",
+    "tactic_id": "TA0008",
+    "description": "Adversaries use SMB to interact with file shares for lateral movement.",
+    "keywords": [
+      {"word": "smb", "weight": 3},
+      {"word": "admin share", "weight": 3},
+      {"word": "ipc$", "weight": 3},
+      {"word": "c$", "weight": 2},
+      {"word": "psexec", "weight": 3},
+      {"word": "wmiexec", "weight": 3},
+      {"word": "impacket", "weight": 3},
+      {"word": "port 445", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1570",
+    "name": "Lateral Tool Transfer",
+    "tactic": "Lateral Movement",
+    "tactic_id": "TA0008",
+    "description": "Adversaries transfer tools or files from one system to another.",
+    "keywords": [
+      {"word": "tool transfer", "weight": 3},
+      {"word": "copy malware", "weight": 3},
+      {"word": "move laterally", "weight": 2},
+      {"word": "lateral movement", "weight": 3},
+      {"word": "pivot", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1005",
+    "name": "Data from Local System",
+    "tactic": "Collection",
+    "tactic_id": "TA0009",
+    "description": "Adversaries collect data stored on local systems.",
+    "keywords": [
+      {"word": "data collection", "weight": 2},
+      {"word": "collect files", "weight": 2},
+      {"word": "file theft", "weight": 3},
+      {"word": "steal data", "weight": 3},
+      {"word": "data harvesting", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1113",
+    "name": "Screen Capture",
+    "tactic": "Collection",
+    "tactic_id": "TA0009",
+    "description": "Adversaries attempt to take screen captures of the desktop.",
+    "keywords": [
+      {"word": "screenshot", "weight": 3},
+      {"word": "screen capture", "weight": 3},
+      {"word": "desktop capture", "weight": 3},
+      {"word": "printscreen", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1056.001",
+    "name": "Input Capture: Keylogging",
+    "tactic": "Collection",
+    "tactic_id": "TA0009",
+    "description": "Adversaries use keyloggers to intercept credentials as a user types them.",
+    "keywords": [
+      {"word": "keylog", "weight": 3},
+      {"word": "keystroke", "weight": 3},
+      {"word": "keyboard capture", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1071.001",
+    "name": "Application Layer Protocol: Web Protocols",
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "description": "Adversaries communicate using application layer protocols associated with web traffic.",
+    "keywords": [
+      {"word": "http beacon", "weight": 3},
+      {"word": "c2 traffic", "weight": 3},
+      {"word": "command and control", "weight": 3},
+      {"word": "c&c", "weight": 3},
+      {"word": "beaconing", "weight": 3},
+      {"word": "cobalt strike", "weight": 3},
+      {"word": "metasploit", "weight": 3},
+      {"word": "meterpreter", "weight": 3},
+      {"word": "http callback", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1071.004",
+    "name": "Application Layer Protocol: DNS",
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "description": "Adversaries communicate using the DNS protocol.",
+    "keywords": [
+      {"word": "dns tunneling", "weight": 3},
+      {"word": "dns c2", "weight": 3},
+      {"word": "dns beacon", "weight": 3},
+      {"word": "dnscat", "weight": 3},
+      {"word": "dns exfiltration", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1573",
+    "name": "Encrypted Channel",
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "description": "Adversaries may employ an encryption algorithm to conceal C2 traffic.",
+    "keywords": [
+      {"word": "encrypted channel", "weight": 3},
+      {"word": "ssl c2", "weight": 3},
+      {"word": "tls tunnel", "weight": 2},
+      {"word": "encrypted communication", "weight": 2},
+      {"word": "custom encryption", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1105",
+    "name": "Ingress Tool Transfer",
+    "tactic": "Command and Control",
+    "tactic_id": "TA0011",
+    "description": "Adversaries transfer tools from an external system.",
+    "keywords": [
+      {"word": "download payload", "weight": 3},
+      {"word": "wget", "weight": 2},
+      {"word": "curl download", "weight": 2},
+      {"word": "certutil", "weight": 3},
+      {"word": "bitsadmin", "weight": 3},
+      {"word": "ftp download", "weight": 2},
+      {"word": "tool download", "weight": 2},
+      {"word": "dropper", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1041",
+    "name": "Exfiltration Over C2 Channel",
+    "tactic": "Exfiltration",
+    "tactic_id": "TA0010",
+    "description": "Adversaries steal data by exfiltrating it over an existing C2 channel.",
+    "keywords": [
+      {"word": "exfiltration", "weight": 3},
+      {"word": "data exfil", "weight": 3},
+      {"word": "data theft", "weight": 3},
+      {"word": "data leak", "weight": 2},
+      {"word": "upload to", "weight": 1},
+      {"word": "send data", "weight": 1}
+    ]
+  },
+  {
+    "id": "T1048",
+    "name": "Exfiltration Over Alternative Protocol",
+    "tactic": "Exfiltration",
+    "tactic_id": "TA0010",
+    "description": "Adversaries may steal data by exfiltrating it over a different protocol.",
+    "keywords": [
+      {"word": "ftp exfiltration", "weight": 3},
+      {"word": "smtp exfiltration", "weight": 3},
+      {"word": "dns exfiltration", "weight": 3},
+      {"word": "alternative protocol", "weight": 2},
+      {"word": "covert channel", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1486",
+    "name": "Data Encrypted for Impact",
+    "tactic": "Impact",
+    "tactic_id": "TA0040",
+    "description": "Adversaries may encrypt data on target systems to interrupt availability.",
+    "keywords": [
+      {"word": "ransomware", "weight": 3},
+      {"word": "file encryption", "weight": 3},
+      {"word": "encrypt files", "weight": 3},
+      {"word": "ransom demand", "weight": 3},
+      {"word": "ransom note", "weight": 3},
+      {"word": "bitcoin ransom", "weight": 3},
+      {"word": ".locky", "weight": 3},
+      {"word": ".wannacry", "weight": 3},
+      {"word": "ryuk", "weight": 3},
+      {"word": "lockbit", "weight": 3},
+      {"word": "conti", "weight": 3},
+      {"word": "revil", "weight": 3},
+      {"word": "encryption key", "weight": 1},
+      {"word": "pay ransom", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1489",
+    "name": "Service Stop",
+    "tactic": "Impact",
+    "tactic_id": "TA0040",
+    "description": "Adversaries stop services to inhibit response or as part of destructive operations.",
+    "keywords": [
+      {"word": "stop service", "weight": 3},
+      {"word": "service disruption", "weight": 2},
+      {"word": "kill service", "weight": 3},
+      {"word": "net stop", "weight": 3},
+      {"word": "disable service", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1490",
+    "name": "Inhibit System Recovery",
+    "tactic": "Impact",
+    "tactic_id": "TA0040",
+    "description": "Adversaries may delete or remove built-in data and turn off services to inhibit recovery.",
+    "keywords": [
+      {"word": "shadow copy", "weight": 3},
+      {"word": "vssadmin", "weight": 3},
+      {"word": "delete backup", "weight": 3},
+      {"word": "wbadmin", "weight": 3},
+      {"word": "bcdedit", "weight": 3},
+      {"word": "disable recovery", "weight": 3},
+      {"word": "delete shadow copies", "weight": 3},
+      {"word": "inhibit recovery", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1498",
+    "name": "Network Denial of Service",
+    "tactic": "Impact",
+    "tactic_id": "TA0040",
+    "description": "Adversaries perform denial of service attacks to degrade or block availability.",
+    "keywords": [
+      {"word": "ddos", "weight": 3},
+      {"word": "denial of service", "weight": 3},
+      {"word": "dos attack", "weight": 3},
+      {"word": "flood attack", "weight": 3},
+      {"word": "syn flood", "weight": 3},
+      {"word": "udp flood", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1204",
+    "name": "User Execution",
+    "tactic": "Execution",
+    "tactic_id": "TA0002",
+    "description": "An adversary relies upon specific actions by a user to execute malicious code.",
+    "keywords": [
+      {"word": "user execution", "weight": 3},
+      {"word": "click link", "weight": 2},
+      {"word": "open attachment", "weight": 2},
+      {"word": "double-click", "weight": 1},
+      {"word": "macro", "weight": 2},
+      {"word": "office macro", "weight": 3},
+      {"word": "enable macro", "weight": 3},
+      {"word": "vba macro", "weight": 3}
+    ]
+  },
+  {
+    "id": "T1059.005",
+    "name": "Command and Scripting Interpreter: Visual Basic",
+    "tactic": "Execution",
+    "tactic_id": "TA0002",
+    "description": "Adversaries may abuse Visual Basic for execution.",
+    "keywords": [
+      {"word": "vbscript", "weight": 3},
+      {"word": "vba", "weight": 2},
+      {"word": "visual basic", "weight": 2},
+      {"word": "wscript", "weight": 3},
+      {"word": "cscript", "weight": 3},
+      {"word": ".vbs", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1134",
+    "name": "Access Token Manipulation",
+    "tactic": "Privilege Escalation",
+    "tactic_id": "TA0004",
+    "description": "Adversaries may modify access tokens to operate under a different user or system security context.",
+    "keywords": [
+      {"word": "token manipulation", "weight": 3},
+      {"word": "impersonation", "weight": 2},
+      {"word": "token theft", "weight": 3},
+      {"word": "seimpersonateprivilege", "weight": 3},
+      {"word": "runas", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1555",
+    "name": "Credentials from Password Stores",
+    "tactic": "Credential Access",
+    "tactic_id": "TA0006",
+    "description": "Adversaries search for common password storage locations.",
+    "keywords": [
+      {"word": "password store", "weight": 3},
+      {"word": "credential manager", "weight": 3},
+      {"word": "browser credential", "weight": 3},
+      {"word": "keychain", "weight": 3},
+      {"word": "password vault", "weight": 3},
+      {"word": "saved password", "weight": 2}
+    ]
+  },
+  {
+    "id": "T1119",
+    "name": "Automated Collection",
+    "tactic": "Collection",
+    "tactic_id": "TA0009",
+    "description": "Adversaries automate collection to gather specific data from a system.",
+    "keywords": [
+      {"word": "automated collection", "weight": 3},
+      {"word": "bulk collection", "weight": 2},
+      {"word": "data staging", "weight": 3},
+      {"word": "archive data", "weight": 2},
+      {"word": "compress data", "weight": 2},
+      {"word": "7zip", "weight": 1},
+      {"word": "winrar", "weight": 1}
+    ]
+  },
+  {
+    "id": "T1195",
+    "name": "Supply Chain Compromise",
+    "tactic": "Initial Access",
+    "tactic_id": "TA0001",
+    "description": "Adversaries may manipulate products or delivery mechanisms prior to receipt.",
+    "keywords": [
+      {"word": "supply chain", "weight": 3},
+      {"word": "software supply chain", "weight": 3},
+      {"word": "compromised software", "weight": 3},
+      {"word": "trojanized", "weight": 3},
+      {"word": "solarwinds", "weight": 3},
+      {"word": "malicious update", "weight": 3}
+    ]
+  }
+]
