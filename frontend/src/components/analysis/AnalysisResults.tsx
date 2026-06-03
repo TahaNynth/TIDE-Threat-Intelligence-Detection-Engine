@@ -150,10 +150,19 @@ export default function AnalysisResults({ result }: Props) {
           <div className="panel p-5 lg:col-span-2 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-gray-200">Executive Summary</h3>
-              {result.summary.llm_enhanced && (
-                <span className="text-xs bg-purple-500/15 text-purple-400 border border-purple-500/20
-                                 px-2 py-0.5 rounded-full">
-                  LLM Enhanced
+              {result.summary.llm_enhanced ? (
+                <span className="flex items-center gap-1.5 text-xs font-semibold
+                                 bg-purple-500/20 text-purple-300 border border-purple-500/40
+                                 px-3 py-1 rounded-full shadow shadow-purple-500/10">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                  ✦ AI Enhanced · {result.summary.llm_provider || 'LLM'}
+                </span>
+              ) : (
+                <span className="flex items-center gap-1.5 text-xs
+                                 bg-[#1a2235] text-gray-500 border border-[#1F2937]
+                                 px-3 py-1 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-600" />
+                  Deterministic
                 </span>
               )}
             </div>
