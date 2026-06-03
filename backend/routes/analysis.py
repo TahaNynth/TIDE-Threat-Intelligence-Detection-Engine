@@ -52,8 +52,10 @@ def analyze():
         settings = _get_settings()
         if settings.get("llm_provider", "none") != "none":
             summary = enhance_summary(summary, text, settings)
-    except Exception:
-        pass
+    except Exception as e:
+        # Surface the error in the summary so the frontend can show it
+        summary["llm_error"] = str(e)
+        summary["llm_enhanced"] = False
 
     ioc_stats = ioc_summary(iocs)
 

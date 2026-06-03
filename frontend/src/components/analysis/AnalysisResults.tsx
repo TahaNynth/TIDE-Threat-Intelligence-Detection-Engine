@@ -170,6 +170,15 @@ export default function AnalysisResults({ result }: Props) {
               {result.summary.executive_summary}
             </p>
 
+            {/* Show LLM error if enhancement failed */}
+            {result.summary.llm_error && (
+              <div className="flex items-start gap-2 text-xs text-amber-400 bg-amber-500/10
+                              border border-amber-500/20 rounded-lg px-3 py-2">
+                <span className="shrink-0">⚠</span>
+                <span>LLM enhancement failed: {result.summary.llm_error}</span>
+              </div>
+            )}
+
             {/* Threat overview */}
             <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[#1F2937]">
               <div>

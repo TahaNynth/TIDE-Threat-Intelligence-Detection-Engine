@@ -1,19 +1,31 @@
 import { useEffect, useState } from 'react';
 import {
   Settings as SettingsIcon, Save, CheckCircle2, XCircle,
-  Eye, EyeOff, Cpu, AlertCircle,
+  Eye, EyeOff, Cpu, AlertCircle, ShieldCheck,
 } from 'lucide-react';
 import { getSettings, updateSettings, testLLMConnection } from '../services/api';
 import toast from 'react-hot-toast';
 
+interface SettingsState {
+  llm_provider: string;
+  openai_api_key: string;
+  gemini_api_key: string;
+  llm_model: string;
+  max_ioc_results: string;
+}
+
 export default function Settings() {
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<SettingsState>({
     llm_provider: 'none',
     openai_api_key: '',
     gemini_api_key: '',
     llm_model: 'gpt-4o-mini',
     max_ioc_results: '500',
   });
+
+  // Track which API keys are already saved in the DB (returned as boolean flags by the backend)
+  const [configured, setConfigured] = useState({ openai: false, gemini: false });
+
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
@@ -21,18 +33,41 @@ export default function Settings() {
   const [showGemini, setShowGemini] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const refreshFromServer = async () => {
+    const s: any = await getSettings();
+    setConfigured({ openai: !!s.openai_configured, gemini: !!s.gemini_configured });
+    setSettings((prev) => ({
+      ...prev,
+      llm_provider: s.llm_provider || 'none',
+      llm_model: s.llm_model || 'gpt-4o-mini',
+      max_ioc_results: s.max_ioc_results || '500',
+      openai_api_key: '',   // never populate input with the raw key
+      gemini_api_key: '',
+    }));
+  };
+
   useEffect(() => {
-    getSettings()
-      .then((s) => setSettings((prev) => ({ ...prev, ...s })))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    refreshFromServer().catch(() => {}).finally(() => setLoading(false));
   }, []);
+
+  // Only send API keys if the user actually typed something new in the field
+  const buildPayload = () => {
+    const payload: Record<string, string> = {
+      llm_provider: settings.llm_provider,
+      llm_model: settings.llm_model,
+      max_ioc_results: settings.max_ioc_results,
+    };
+    if (settings.openai_api_key.trim()) payload.openai_api_key = settings.openai_api_key.trim();
+    if (settings.gemini_api_key.trim()) payload.gemini_api_key = settings.gemini_api_key.trim();
+    return payload;
+  };
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      await updateSettings(settings);
-      toast.success('Settings saved successfully');
+      await updateSettings(buildPayload());
+      await refreshFromServer();
+      toast.success('Settings saved');
     } catch (e: any) {
       toast.error(e.message);
     } finally {
@@ -44,7 +79,9 @@ export default function Settings() {
     setTesting(true);
     setTestResult(null);
     try {
-      await updateSettings(settings);
+      // Save first so the backend has the latest key before testing
+      await updateSettings(buildPayload());
+      await refreshFromServer();
       const result = await testLLMConnection();
       setTestResult(result);
       if (result.success) toast.success(result.message);
@@ -56,10 +93,14 @@ export default function Settings() {
     }
   };
 
-  const change = (key: string, value: string) =>
+  const change = (key: keyof SettingsState, value: string) =>
     setSettings((s) => ({ ...s, [key]: value }));
 
   if (loading) return null;
+
+  const provider = settings.llm_provider;
+  const geminiConfigured = configured.gemini;
+  const openaiConfigured = configured.openai;
 
   return (
     <div className="p-6 max-w-2xl space-y-6">
@@ -78,26 +119,28 @@ export default function Settings() {
           </div>
           <div>
             <h2 className="text-sm font-semibold text-gray-200">AI / LLM Enhancement</h2>
-            <p className="text-xs text-gray-500">Optional — the platform works fully without an API key</p>
+            <p className="text-xs text-gray-500">
+              Optional — the platform works fully without an API key
+            </p>
           </div>
         </div>
 
-        {/* Provider */}
+        {/* Provider selector */}
         <div className="space-y-2">
           <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
             LLM Provider
           </label>
           <div className="grid grid-cols-3 gap-2">
             {[
-              { value: 'none', label: 'None (Offline)', desc: 'Fully deterministic' },
-              { value: 'openai', label: 'OpenAI', desc: 'GPT-4o / GPT-4o-mini' },
-              { value: 'gemini', label: 'Google Gemini', desc: 'Gemini 1.5 Flash' },
+              { value: 'none',   label: 'None (Offline)',  desc: 'Fully deterministic' },
+              { value: 'openai', label: 'OpenAI',          desc: 'GPT-4o / GPT-4o-mini' },
+              { value: 'gemini', label: 'Google Gemini',   desc: 'Gemini 1.5 Flash' },
             ].map(({ value, label, desc }) => (
               <button
                 key={value}
-                onClick={() => change('llm_provider', value)}
+                onClick={() => { change('llm_provider', value); setTestResult(null); }}
                 className={`p-3 rounded-xl border text-left transition-all ${
-                  settings.llm_provider === value
+                  provider === value
                     ? 'border-blue-500/40 bg-blue-600/15 text-white'
                     : 'border-[#1F2937] bg-[#0B1220] text-gray-400 hover:border-[#374151]'
                 }`}
@@ -109,9 +152,16 @@ export default function Settings() {
           </div>
         </div>
 
-        {/* OpenAI settings */}
-        {settings.llm_provider === 'openai' && (
+        {/* OpenAI key input */}
+        {provider === 'openai' && (
           <div className="space-y-3">
+            {openaiConfigured && (
+              <div className="flex items-center gap-2 text-xs text-green-400
+                              bg-green-500/10 border border-green-500/20 rounded-lg px-3 py-2">
+                <ShieldCheck size={14} />
+                API key is saved. Leave blank to keep it, or paste a new one to replace it.
+              </div>
+            )}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
                 OpenAI API Key
@@ -121,7 +171,7 @@ export default function Settings() {
                   type={showOpenAI ? 'text' : 'password'}
                   value={settings.openai_api_key}
                   onChange={(e) => change('openai_api_key', e.target.value)}
-                  placeholder="sk-…"
+                  placeholder={openaiConfigured ? 'Leave blank to keep existing key…' : 'sk-…'}
                   className="input-field pr-10 font-mono text-sm"
                 />
                 <button
@@ -149,46 +199,64 @@ export default function Settings() {
           </div>
         )}
 
-        {/* Gemini settings */}
-        {settings.llm_provider === 'gemini' && (
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              Google AI API Key
-            </label>
-            <div className="relative">
-              <input
-                type={showGemini ? 'text' : 'password'}
-                value={settings.gemini_api_key}
-                onChange={(e) => change('gemini_api_key', e.target.value)}
-                placeholder="AIza…"
-                className="input-field pr-10 font-mono text-sm"
-              />
-              <button
-                onClick={() => setShowGemini(!showGemini)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
-              >
-                {showGemini ? <EyeOff size={15} /> : <Eye size={15} />}
-              </button>
+        {/* Gemini key input */}
+        {provider === 'gemini' && (
+          <div className="space-y-3">
+            {geminiConfigured && (
+              <div className="flex items-center gap-2 text-xs text-green-400
+                              bg-green-500/10 border border-green-500/20 rounded-lg px-3 py-2">
+                <ShieldCheck size={14} />
+                API key is saved. Leave blank to keep it, or paste a new one to replace it.
+              </div>
+            )}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Google AI API Key
+              </label>
+              <div className="relative">
+                <input
+                  type={showGemini ? 'text' : 'password'}
+                  value={settings.gemini_api_key}
+                  onChange={(e) => change('gemini_api_key', e.target.value)}
+                  placeholder={geminiConfigured ? 'Leave blank to keep existing key…' : 'AIza…'}
+                  className="input-field pr-10 font-mono text-sm"
+                />
+                <button
+                  onClick={() => setShowGemini(!showGemini)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                >
+                  {showGemini ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </div>
             </div>
           </div>
         )}
 
-        {settings.llm_provider !== 'none' && (
-          <button onClick={handleTest} disabled={testing} className="btn-secondary">
-            {testing ? (
-              <><SettingsIcon size={14} className="animate-spin" /> Testing connection…</>
-            ) : 'Test Connection'}
-          </button>
+        {/* Test button */}
+        {provider !== 'none' && (
+          <div className="flex items-center gap-3 flex-wrap">
+            <button onClick={handleTest} disabled={testing} className="btn-secondary">
+              {testing
+                ? <><SettingsIcon size={14} className="animate-spin" /> Testing…</>
+                : 'Test Connection'}
+            </button>
+            <span className="text-xs text-gray-600">
+              {(provider === 'gemini' ? geminiConfigured : openaiConfigured)
+                ? 'Uses the saved key unless you typed a new one above'
+                : 'Save your key first, then test'}
+            </span>
+          </div>
         )}
 
+        {/* Test result */}
         {testResult && (
-          <div className={`flex items-center gap-2 text-sm px-4 py-3 rounded-lg border ${
+          <div className={`flex items-start gap-2 text-sm px-4 py-3 rounded-lg border ${
             testResult.success
               ? 'bg-green-500/10 border-green-500/20 text-green-400'
               : 'bg-red-500/10 border-red-500/20 text-red-400'
           }`}>
-            {testResult.success ? <CheckCircle2 size={15} /> : <XCircle size={15} />}
-            {testResult.message}
+            {testResult.success ? <CheckCircle2 size={15} className="shrink-0 mt-0.5" /> : <XCircle size={15} className="shrink-0 mt-0.5" />}
+            <span>{testResult.message}</span>
           </div>
         )}
       </div>
@@ -211,15 +279,14 @@ export default function Settings() {
         </div>
       </div>
 
-      {/* Info callout */}
-      <div className="flex items-start gap-3 bg-blue-500/5 border border-blue-500/15 rounded-xl px-5 py-4 text-sm text-blue-300">
+      {/* Offline note */}
+      <div className="flex items-start gap-3 bg-blue-500/5 border border-blue-500/15 rounded-xl px-5 py-4">
         <AlertCircle size={16} className="shrink-0 mt-0.5 text-blue-400" />
         <div>
-          <p className="font-medium text-blue-300">Offline Mode</p>
+          <p className="text-sm font-medium text-blue-300">Offline Mode</p>
           <p className="text-xs text-blue-400/70 mt-1">
             All core features — IOC extraction, ATT&CK mapping, rule generation, and risk scoring —
-            work completely offline without any API keys. LLM integration only enhances the executive
-            summary text.
+            work completely offline. LLM integration only rewrites the executive summary paragraph.
           </p>
         </div>
       </div>
