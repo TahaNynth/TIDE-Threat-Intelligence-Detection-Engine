@@ -63,7 +63,7 @@ def _enhance_gemini(summary: Dict, text: str, config: Dict) -> Dict:
             return summary
 
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.0-flash")
 
         prompt = (
             "You are a cybersecurity analyst. Rewrite this executive summary professionally "

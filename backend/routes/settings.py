@@ -75,7 +75,7 @@ def test_llm():
                 return jsonify({"success": False, "message": "No Gemini API key saved. Enter it above and save first."})
             genai.configure(api_key=api_key)
             # Make a real API call to actually verify the key works
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel("gemini-2.0-flash")
             model.generate_content("Reply with the single word OK.")
             return jsonify({"success": True, "message": "Gemini API key verified — connection successful."})
 
